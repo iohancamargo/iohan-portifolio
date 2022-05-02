@@ -1,0 +1,25 @@
+{
+  "short_name": "Iohan Portfolio",
+  "name": "My simple but nice portfolio",
+  "icons": [
+    {
+      "src": "dev-icom.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "dev-icom.ico",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "dev-icom.ico",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

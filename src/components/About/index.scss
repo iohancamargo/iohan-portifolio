@@ -1,0 +1,257 @@
+.about-page {
+  background: #262626;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 88px; // header
+  margin-bottom: 68px; // footer
+  min-height: calc(100vh - (88px + 64px));
+  color: white;
+  flex-wrap: wrap;
+
+  .about-me {
+    padding: 16px;
+  }
+
+  h1 {
+    color: #fff;
+    font-size: 40px;
+    line-height: 40px;
+    margin: 0;
+    font-family: 'Coolvetica';
+    font-weight: 400;
+  
+    // Small devices, somente mostrando os textos
+    @media screen and (max-width: 730px) {
+      font-size: 40px;
+      line-height: 40px;
+    }
+
+    @media screen and (max-width: 520px) {
+      font-size: 32px;
+      line-height: 32px;
+    }
+  }
+
+  .text-section {
+    animation: fadeIn 1.5s 1.5s backwards;
+    padding: 0px 16px 16px 16px;
+  }
+
+  p {
+    color: #f2f2f2;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: justify;
+    margin-block-end: 0.5em;
+    margin-block-start: 0.5em;
+  }
+
+  .skill-icons {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    animation: fadeIn 1.5s 1.5s backwards;
+
+    .icon-info {
+      width: 80px;
+      padding: 16px;
+
+      .subgroup {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        flex-direction: column;
+        justify-content: center;
+
+        span {
+          font-size: 16px;
+          color: #f2f2f2;
+          font-weight: 500;
+        }
+
+        .icon-gray {
+          display: block;
+        }
+
+        .icon-color {
+          display: none;
+        }
+
+        img {
+          width: 56px;
+          height: 56px;
+        }
+        
+        svg {
+          font-size: 56px;
+        }
+      }
+    }
+
+    .subgroup:hover {
+      span {
+        font-weight: 800;
+      }
+    }
+    .android .subgroup:hover {
+      svg {
+        color: #a5bb46;
+      }
+    }
+    .angular .subgroup:hover {
+      svg {
+        color: #dd0031;
+      }
+    }
+    .amazon .subgroup:hover {
+      svg {
+        color: #ff9900;
+      }
+    }
+    .css3 .subgroup:hover {
+      svg {
+        color: #28a4d9;
+      }
+    }
+    .docker .subgroup:hover {
+      svg {
+        color: #228ee2;
+      }
+    }
+    .github .subgroup:hover {
+      svg {
+        color: #ec4d28;
+      }
+    }
+    .htmlClass .subgroup:hover {
+      svg {
+        color: #f06529;
+      }
+    }
+    .apple .subgroup:hover {
+      svg {
+        color: #a9a9a9;
+      }
+    }
+    .javascript .subgroup:hover {
+      svg {
+        color: #efd81d;
+      }
+    }
+    .laravel .subgroup:hover {
+      svg {
+        color: #ff291a;
+      }
+    }
+    .nodeJS .subgroup:hover {
+      svg {
+        color: #70ac59;
+      }
+    }
+    .php .subgroup:hover {
+      svg {
+        color: #7075aa;
+      }
+    }
+    .react .subgroup:hover {
+      svg {
+        color: #5ed4f4;
+      }
+    }
+    .sass .subgroup:hover {
+      svg {
+        color: #c36291;
+      }
+    }
+
+    .changeImage .subgroup:hover {
+      .icon-gray {
+        display: none;
+      }
+      .icon-color {
+        display: block;
+      }
+    }
+  }
+
+  
+  .hobbies {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    animation: fadeIn 1.5s 1.5s backwards;
+
+    @media screen and (max-width: 711px) {
+      justify-content: flex-start;
+    }
+    @media screen and (max-width: 576px) {
+      justify-content: space-between;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    .hobbies-info {
+      width: 128px;
+      margin: 16px 16px 16px -8px;
+      .subgroup {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        flex-direction: column;
+        justify-content: center;
+        // :hover {
+          // background: #4d4d4d;
+          // border-radius: 16px;
+        // }
+        span {
+          font-size: 16px;
+          color: #f2f2f2;
+          font-weight: 500;
+        }
+  
+        img {
+          width: 56px;
+          height: 56px;
+          padding: 8px;
+        }
+
+      }
+    }
+  }
+
+  .qualities {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    animation: fadeIn 1.5s 1.5s backwards;
+
+    .qualities-info {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: flex-start;
+      
+      @media screen and (max-width: 864px) {
+        justify-content: space-between;
+      }
+    }
+
+    .subgroup {
+      padding: 0px 8px;
+      width: 184px;
+      max-width: 184px;
+      flex-grow: 1;
+
+    }
+  }
+
+}
