@@ -1,4 +1,4 @@
-# Tópicos da documentação
+# Topics
   - [Considerations](#considerations)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
