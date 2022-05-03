@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Loader from 'react-loaders';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useRef } from 'react';
@@ -11,10 +11,13 @@ import { faUser, faEnvelope, faCircleExclamation, faMessage } from '@fortawesome
 import loading from '../../assets/images/loading.svg';
 import { emailValidator } from '../../utils/validations';
 import * as Yup from 'yup';
-//import ReCAPTCHA from 'react-google-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { apiReCaptcha } from '../../services/api';
+import { toast } from 'react-toastify';
 
 const Contact = () => {
   const form = useRef();
+  const [validToken, setValidToken] = useState(false);
   const [letterClass, setLetterClass] = useState('text-animate');
 
   useEffect(() => {
@@ -31,14 +34,43 @@ const Contact = () => {
       .min(14, "Message must have at less 14 characters")
       .required("Message must be informed"),
   });
-  
-  // const recaptchaOnChange = (value) => {
-  //   console.log('Captcha value:', value);
-  // }
 
-  // const recaptchaOnError = (value) => {
-  //   console.log('Captcha value:', value);
-  // }
+  const recaptchaOnChange = useCallback(async (token) => {
+      if (token) {
+        const dataToSend = {
+          secret: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
+          response: token
+        }
+        try {
+          // const { success, challenge_ts, hostname } = await apiReCaptcha.post('/siteverify', dataToSend);
+          const response = await apiReCaptcha.post('/siteverify', dataToSend);
+          console.log('response recaptcha', response);
+          if (response.success) {
+            setValidToken(true);
+          }
+          /* Expiration recaptcha token */
+          setTimeout(() => {
+            setValidToken(false);
+          }, 120000)
+        } catch (err) {
+          toast.warning("Unable to verify reCaptcha...", {
+            position: toast.POSITION.TOP_RIGHT,
+            theme: 'dark'
+          });
+          return false;
+        }
+      }
+    },
+    [],
+  );
+
+  const recaptchaOnError = (value) => {
+    console.log('Error re-captcha:', value);
+    toast.warning("Unable to verify reCaptcha...", {
+      position: toast.POSITION.TOP_RIGHT,
+      theme: 'dark'
+    });
+  }
 
   const handleFormSubmit = async (setSubmitting, resetForm) => {
     emailjs
@@ -50,9 +82,17 @@ const Contact = () => {
       )
       .then((response) => {
         resetForm();
+        toast.success("E-mail successfully sent!", {
+          position: toast.POSITION.TOP_RIGHT,
+          theme: 'dark'
+        });
       })
       .catch((err) => {
         console.log('error', err);
+        toast.warning("Unable to send e-mail...", {
+          position: toast.POSITION.TOP_RIGHT,
+          theme: 'dark'
+        });
       }).finally(() => {
         setSubmitting(false);
       });
@@ -69,16 +109,6 @@ const Contact = () => {
               idx={15}
             />
           </h1>
-
-          {/* <div className="App">
-            <ReCAPTCHA
-              sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
-              theme='dark'
-              size='normal'
-              onChange={recaptchaOnChange}
-              onErrored={recaptchaOnError}
-            />
-          </div> */}
 
           <div className='contact-mail'>
             {/* Have two validation schemes below the form in case it is a custom validation. */}
@@ -117,9 +147,9 @@ const Contact = () => {
                     </div>
                     <div className='email'>
                       <label htmlFor="email">
-                        <FontAwesomeIcon icon={faEnvelope} color="#a3a3a3" /> Email
+                        <FontAwesomeIcon icon={faEnvelope} color="#a3a3a3" /> E-mail
                       </label>
-                      <Field type="email" name="email" placeholder="Type your email here..." maxLength={150} minLength={6} />
+                      <Field type="email" name="email" placeholder="Type your e-mail here..." maxLength={150} minLength={6} />
                       {touched.email && errors.email && (
                           <span>
                           <FontAwesomeIcon icon={faCircleExclamation} color="#c74251" />
@@ -140,9 +170,20 @@ const Contact = () => {
                     </span>
                     )}
                   </div>
-                  {!isSubmitting && 
+                  {!isSubmitting && validToken &&
                     <div className='btn-group'>
                       <input type="submit" className="btn-section" disabled={isSubmitting} value="Send e-mail" />
+                    </div>
+                  }
+                  {!isSubmitting && !validToken &&
+                    <div className='btn-group'>
+                      <ReCAPTCHA
+                        sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                        theme='dark'
+                        size='normal'
+                        onChange={recaptchaOnChange}
+                        onErrored={recaptchaOnError}
+                      />
                     </div>
                   }
                   {isSubmitting && 
