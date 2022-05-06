@@ -13,7 +13,7 @@ const Footer = () => {
         <a href="https://www.linkedin.com/in/iohan-camargo-027b2817a/"
           target="_blank"
           rel="noreferrer">
-          <FontAwesomeIcon icon={faLinkedin} color="#878787" /> <span>Linkedl</span>
+          <FontAwesomeIcon icon={faLinkedin} color="#878787" /> <span>LinkedIn</span>
         </a>
         <a href="https://github.com/iohancamargo"
           target="_blank"

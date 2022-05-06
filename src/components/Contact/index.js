@@ -64,13 +64,10 @@ const Contact = () => {
     [],
   );
 
-  const recaptchaOnError = (value) => {
-    console.log('Error re-captcha:', value);
-    toast.warning("Unable to verify reCaptcha...", {
-      position: toast.POSITION.TOP_RIGHT,
-      theme: 'dark'
-    });
-  }
+  const recaptchaOnError = useCallback(async (error) => {
+    console.log('recaptcha error: ', error);
+    console.log('using key: ', process.env.REACT_APP_RECAPTCHA_SITE_KEY);
+  },[],);
 
   const handleFormSubmit = async (setSubmitting, resetForm) => {
     emailjs
@@ -131,7 +128,7 @@ const Contact = () => {
               }}
             >
               {({ isSubmitting, touched, errors }) => (
-                <Form ref={form}>
+                <Form ref={form} data-netlify-recaptcha="true" data-netlify="true">
                   <div className='first-infos'>
                     <div className='name'>
                       <label htmlFor="name">
