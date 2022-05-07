@@ -173,20 +173,21 @@ const Contact = () => {
                     </span>
                     )}
                   </div>
-                  {!isSubmitting && validToken &&
+                  {!isSubmitting && 
                     <div className='btn-group'>
                       <input type="submit" className="btn-section" disabled={isSubmitting} value="Send e-mail" />
                     </div>
                   }
-                  {!isSubmitting && !validToken &&
+                  {!isSubmitting && 
                     <div className='btn-group'>
-                      <ReCAPTCHA
+                      <div data-netlify-recaptcha="true"></div>
+                      {/* <ReCAPTCHA
                         sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                         theme='dark'
                         size='normal'
                         onChange={recaptchaOnChange}
                         onErrored={recaptchaOnError}
-                      />
+                      /> */}
                     </div>
                   }
                   {isSubmitting && 
