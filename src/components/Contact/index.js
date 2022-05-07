@@ -37,13 +37,18 @@ const Contact = () => {
 
   const recaptchaOnChange = useCallback(async (token) => {
       if (token) {
-        const dataToSend = {
-          secret: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
-          response: token
-        }
+        const params = {
+          secret: process.env.REACT_APP_RECAPTCHA_SECRET,
+          token: token
+        };
+        
+        const dataResponse = Object.keys(params)
+          .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+          .join('&');
+
         try {
-          // const { success, challenge_ts, hostname } = await apiReCaptcha.post('/siteverify', dataToSend);
-          const response = await apiReCaptcha.post('/siteverify', dataToSend);
+          // const { success, challenge_ts, hostname } = await apiReCaptcha.post('/siteverify', dataResponseToSend);
+          const response = await apiReCaptcha.post(`/siteverify`, dataResponse);
           console.log('response recaptcha', response);
           if (response.success) {
             setValidToken(true);
@@ -51,7 +56,7 @@ const Contact = () => {
           /* Expiration recaptcha token */
           setTimeout(() => {
             setValidToken(false);
-          }, 120000)
+          }, 120000);
         } catch (err) {
           toast.warning("Unable to verify reCaptcha...", {
             position: toast.POSITION.TOP_RIGHT,
@@ -64,9 +69,11 @@ const Contact = () => {
     [],
   );
 
-  const recaptchaOnError = useCallback(async (error) => {
-    console.log('recaptcha error: ', error);
-    console.log('using key: ', process.env.REACT_APP_RECAPTCHA_SITE_KEY);
+  const recaptchaOnError = useCallback(async () => {
+    toast.warning("Unable to verify reCaptcha...", {
+      position: toast.POSITION.TOP_RIGHT,
+      theme: 'dark'
+    });
   },[],);
 
   const handleFormSubmit = async (setSubmitting, resetForm) => {
@@ -85,7 +92,6 @@ const Contact = () => {
         });
       })
       .catch((err) => {
-        console.log('error', err);
         toast.warning("Unable to send e-mail...", {
           position: toast.POSITION.TOP_RIGHT,
           theme: 'dark'
