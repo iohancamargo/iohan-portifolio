@@ -130,6 +130,21 @@
             animation: fadeIn backwards;
             width: 44.5px;
           }
+
+          
+        }
+        .sent-message {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          span {
+            color: #a3a3a3;
+            font-size: 24px;
+          }
+          svg {
+            font-size: 24px;
+          }
         }
         .btn-section {
           width: 50%;

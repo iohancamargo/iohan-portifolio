@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Loader from 'react-loaders';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useRef } from 'react';
@@ -7,17 +7,19 @@ import AnimatedLetters from '../AnimatedLetters';
 import './index.scss';
 import { Field, Form, Formik } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEnvelope, faCircleExclamation, faMessage } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faEnvelope, faCircleExclamation, faMessage, faEnvelopeCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import loading from '../../assets/images/loading.svg';
 import { emailValidator } from '../../utils/validations';
 import * as Yup from 'yup';
-// import ReCAPTCHA from 'react-google-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha';
 // import { apiReCaptcha } from '../../services/api';
 import { toast } from 'react-toastify';
 
 const Contact = () => {
   const form = useRef();
-  // const [validToken, setValidToken] = useState(false);
+  const recaptchaRef = useRef();
+  const [validToken, setValidToken] = useState(false);
+  const [sentEmail, setSentEmail] = useState(false);
   const [letterClass, setLetterClass] = useState('text-animate');
 
   useEffect(() => {
@@ -34,8 +36,18 @@ const Contact = () => {
       .min(14, "Message must have at less 14 characters")
       .required("Message must be informed"),
   });
-
-  // const recaptchaOnChange = useCallback(async (token) => {
+  const recaptchaOnChange = useCallback(async () => {
+    const token = recaptchaRef.current.getValue();
+    if (token !== undefined && token !== null && token !== '') {
+      setTimeout(() => {
+        setValidToken(true);
+      }, 600);
+    } else {
+      toast.warning("Unable to verify reCaptcha...", {position: toast.POSITION.TOP_RIGHT,theme: 'dark'});
+    }
+  },[],);
+  // const recaptchaOnChange = useCallback(async () => {
+  //     const token = recaptchaRef.current.getValue();
   //     if (token) {
   //       const params = {
   //         secret: process.env.REACT_APP_RECAPTCHA_SECRET,
@@ -90,6 +102,7 @@ const Contact = () => {
           position: toast.POSITION.TOP_RIGHT,
           theme: 'dark'
         });
+        setSentEmail(true);
       })
       .catch((err) => {
         toast.warning("Unable to send e-mail...", {
@@ -134,8 +147,7 @@ const Contact = () => {
               }}
             >
               {({ isSubmitting, touched, errors }) => (
-                <Form ref={form} data-netlify-recaptcha="true" data-netlify="true">
-                  <div className="g-recaptcha" data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}></div>
+                <Form ref={form} data-netlify="true" data-netlify-recaptcha="true" name="contact">
                   <div className='first-infos'>
                     <div className='name'>
                       <label htmlFor="name">
@@ -174,30 +186,40 @@ const Contact = () => {
                     </span>
                     )}
                   </div>
-                  {!isSubmitting && 
+                  {!sentEmail && !isSubmitting && validToken &&
                     <div className='btn-group'>
                       <input type="submit" className="btn-section" disabled={isSubmitting} value="Send e-mail" />
                     </div>
                   }
-                  <div className='btn-group'>
-                    Recaptcha auto render
-                    <div data-netlify-recaptcha="true" data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}></div>
-                  </div>
-                  {/* {!isSubmitting && !validToken &&
+
+                  {!sentEmail && !isSubmitting && !validToken &&
                     <div className='btn-group'>
                       <ReCAPTCHA
+                        id="recaptcha-google"
                         name="g-recaptcha"
+                        ref={recaptchaRef}
                         sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                         theme='dark'
                         size='normal'
                         onChange={recaptchaOnChange}
-                        onErrored={recaptchaOnError}
                       />
                     </div>
-                  } */}
+                  }
                   {isSubmitting && 
                     <div className='btn-group'>
                       <img src={loading} alt={`Sending email...`} className='loading'/> 
+                    </div>
+                  }
+
+                  {sentEmail && 
+                    <div className='sent-message'>
+                      <h1>
+                        <AnimatedLetters
+                          letterClass={letterClass}
+                          strArray={[<FontAwesomeIcon icon={faEnvelopeCircleCheck} color="#a3a3a3" /> , 'Email received.']}
+                          idx={15}
+                        />
+                      </h1>
                     </div>
                   }
                 </Form>
