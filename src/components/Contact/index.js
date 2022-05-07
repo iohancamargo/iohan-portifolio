@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from 'react-loaders';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useRef } from 'react';
@@ -11,13 +11,13 @@ import { faUser, faEnvelope, faCircleExclamation, faMessage } from '@fortawesome
 import loading from '../../assets/images/loading.svg';
 import { emailValidator } from '../../utils/validations';
 import * as Yup from 'yup';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { apiReCaptcha } from '../../services/api';
+// import ReCAPTCHA from 'react-google-recaptcha';
+// import { apiReCaptcha } from '../../services/api';
 import { toast } from 'react-toastify';
 
 const Contact = () => {
   const form = useRef();
-  const [validToken, setValidToken] = useState(false);
+  // const [validToken, setValidToken] = useState(false);
   const [letterClass, setLetterClass] = useState('text-animate');
 
   useEffect(() => {
