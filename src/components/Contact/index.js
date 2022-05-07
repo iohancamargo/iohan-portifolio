@@ -35,46 +35,46 @@ const Contact = () => {
       .required("Message must be informed"),
   });
 
-  const recaptchaOnChange = useCallback(async (token) => {
-      if (token) {
-        const params = {
-          secret: process.env.REACT_APP_RECAPTCHA_SECRET,
-          token: token
-        };
+  // const recaptchaOnChange = useCallback(async (token) => {
+  //     if (token) {
+  //       const params = {
+  //         secret: process.env.REACT_APP_RECAPTCHA_SECRET,
+  //         token: token
+  //       };
         
-        const dataResponse = Object.keys(params)
-          .map((key) => `${key}=${encodeURIComponent(params[key])}`)
-          .join('&');
+  //       const dataResponse = Object.keys(params)
+  //         .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+  //         .join('&');
 
-        try {
-          // const { success, challenge_ts, hostname } = await apiReCaptcha.post('/siteverify', dataResponseToSend);
-          const response = await apiReCaptcha.post(`/siteverify`, dataResponse);
-          console.log('response recaptcha', response);
-          if (response.success) {
-            setValidToken(true);
-          }
-          /* Expiration recaptcha token */
-          setTimeout(() => {
-            setValidToken(false);
-          }, 120000);
-        } catch (err) {
-          toast.warning("Unable to verify reCaptcha...", {
-            position: toast.POSITION.TOP_RIGHT,
-            theme: 'dark'
-          });
-          return false;
-        }
-      }
-    },
-    [],
-  );
+  //       try {
+  //         // const { success, challenge_ts, hostname } = await apiReCaptcha.post('/siteverify', dataResponseToSend);
+  //         const response = await apiReCaptcha.post(`/siteverify`, dataResponse);
+  //         console.log('response recaptcha', response);
+  //         if (response.success) {
+  //           setValidToken(true);
+  //         }
+  //         /* Expiration recaptcha token */
+  //         setTimeout(() => {
+  //           setValidToken(false);
+  //         }, 120000);
+  //       } catch (err) {
+  //         toast.warning("Unable to verify reCaptcha...", {
+  //           position: toast.POSITION.TOP_RIGHT,
+  //           theme: 'dark'
+  //         });
+  //         return false;
+  //       }
+  //     }
+  //   },
+  //   [],
+  // );
 
-  const recaptchaOnError = useCallback(async () => {
-    toast.warning("Unable to verify reCaptcha...", {
-      position: toast.POSITION.TOP_RIGHT,
-      theme: 'dark'
-    });
-  },[],);
+  // const recaptchaOnError = useCallback(async () => {
+  //   toast.warning("Unable to verify reCaptcha...", {
+  //     position: toast.POSITION.TOP_RIGHT,
+  //     theme: 'dark'
+  //   });
+  // },[],);
 
   const handleFormSubmit = async (setSubmitting, resetForm) => {
     emailjs
@@ -135,6 +135,7 @@ const Contact = () => {
             >
               {({ isSubmitting, touched, errors }) => (
                 <Form ref={form} data-netlify-recaptcha="true" data-netlify="true">
+                  <div className="g-recaptcha" data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}></div>
                   <div className='first-infos'>
                     <div className='name'>
                       <label htmlFor="name">
@@ -178,18 +179,22 @@ const Contact = () => {
                       <input type="submit" className="btn-section" disabled={isSubmitting} value="Send e-mail" />
                     </div>
                   }
-                  {!isSubmitting && 
+                  <div className='btn-group'>
+                    Recaptcha auto render
+                    <div data-netlify-recaptcha="true" data-sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}></div>
+                  </div>
+                  {/* {!isSubmitting && !validToken &&
                     <div className='btn-group'>
-                      <div data-netlify-recaptcha="true"></div>
-                      {/* <ReCAPTCHA
+                      <ReCAPTCHA
+                        name="g-recaptcha"
                         sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                         theme='dark'
                         size='normal'
                         onChange={recaptchaOnChange}
                         onErrored={recaptchaOnError}
-                      /> */}
+                      />
                     </div>
-                  }
+                  } */}
                   {isSubmitting && 
                     <div className='btn-group'>
                       <img src={loading} alt={`Sending email...`} className='loading'/> 
